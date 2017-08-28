@@ -92,6 +92,10 @@ func initCommands() {
 		"ship",
 		"Ship two users",
 		func(s *discordgo.Session, m *discordgo.MessageCreate, args []string) {
+			if len(args) < 2 {
+				_, _ = s.ChannelMessageSend(m.ChannelID, "I need two names in order to ship :cry:")
+				return
+			}
 			v := 0
 			vowel := func(c rune) bool {
 				switch c {
@@ -182,7 +186,7 @@ func initCommands() {
 }
 
 func main() {
-	tagger, err = pos.NewTagger("/d/code/stanford-postagger/models/english-left3words-distsim.tagger", "/d/code/stanford-postagger/stanford-postagger-3.7.0.jar")
+	tagger, err = pos.NewTagger("./stanford-postagger/models/english-left3words-distsim.tagger", "./stanford-postagger/stanford-postagger-3.7.0.jar")
 	if err != nil {
 		fmt.Println("error initializing tagger,", err)
 		return
