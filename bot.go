@@ -33,8 +33,8 @@ var (
 
 func init() {
 	flag.StringVar(&token, "t", "", "Bot Token")
-	flag.StringVar(&model_path, "model", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger", "Path to the tagger's model. Default `$GOPATH/src/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger`")
-	flag.StringVar(&tagger_path, "tagger", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar", "Path to the tagger JAR. Default `$GOPATH/src/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar`")
+	flag.StringVar(&model_path, "model", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger", "Path to the tagger's model.")
+	flag.StringVar(&tagger_path, "tagger", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar", "Path to the tagger JAR.")
 	flag.Parse()
 	rand.Seed(time.Now().Unix())
 	re = regexp.MustCompile(`[^a-zA-Z0-9\s.,?!;:'"\[\]/\\()\-_+@#$%^&*|<>=]`)
