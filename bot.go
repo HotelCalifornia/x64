@@ -8,6 +8,7 @@ import (
 	"github.com/kamildrazkiewicz/go-stanford-nlp"
 	_ "github.com/mattn/go-sqlite3"
 	"math/rand"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -20,21 +21,23 @@ type Cmd struct {
 }
 
 var (
-	botID    		string
-	commands 		[]Cmd
-	db       		*sql.DB
-	err      		error
-	re       		*regexp.Regexp
-	tagger   		*pos.Tagger
-	token    		string
-	model_path	string
+	botID       string
+	commands    []Cmd
+	db          *sql.DB
+	err         error
+	re          *regexp.Regexp
+	tagger      *pos.Tagger
+	token       string
+	model_path  string
 	tagger_path string
+	db_path     string
 )
 
 func init() {
 	flag.StringVar(&token, "t", "", "Bot Token")
-	flag.StringVar(&model_path, "model", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger", "Path to the tagger's model.")
-	flag.StringVar(&tagger_path, "tagger", "$GOPATH/src/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar", "Path to the tagger JAR.")
+	flag.StringVar(&model_path, "model", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger", "Path to the tagger's model.")
+	flag.StringVar(&tagger_path, "tagger", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar", "Path to the tagger JAR.")
+	flag.StringVar(&db_path, "db", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/words.db", "Path to the database of words")
 	flag.Parse()
 	rand.Seed(time.Now().Unix())
 	re = regexp.MustCompile(`[^a-zA-Z0-9\s.,?!;:'"\[\]/\\()\-_+@#$%^&*|<>=]`)
@@ -167,9 +170,9 @@ func initCommands() {
 			verbs = append(verbs, getWords("VBN")...)
 			verbs = append(verbs, getWords("VBP")...)
 			_, _ = s.ChannelMessageSend(m.ChannelID,
-				determiners[rand.Intn(len(determiners))] + " " + nouns[rand.Intn(len(nouns))] + " " +
-					adverbs[rand.Intn(len(adverbs))] + " " + verbs[rand.Intn(len(verbs))] + " " +
-					determiners[rand.Intn(len(determiners))] + " " + nouns[rand.Intn(len(nouns))],
+				determiners[rand.Intn(len(determiners))]+" "+nouns[rand.Intn(len(nouns))]+" "+
+					adverbs[rand.Intn(len(adverbs))]+" "+verbs[rand.Intn(len(verbs))]+" "+
+					determiners[rand.Intn(len(determiners))]+" "+nouns[rand.Intn(len(nouns))],
 			)
 		},
 	})
@@ -191,11 +194,12 @@ func initCommands() {
 
 func main() {
 	tagger, err = pos.NewTagger(model_path, tagger_path)
+	fmt.Println(model_path, tagger_path)
 	if err != nil {
 		fmt.Println("error initializing tagger,", err)
 		return
 	}
-	db, err = sql.Open("sqlite3", "./words.db")
+	db, err = sql.Open("sqlite3", db_path)
 	if err != nil {
 		fmt.Println("error opening database,", err)
 		return
