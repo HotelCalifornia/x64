@@ -39,7 +39,7 @@ func init() {
 	flag.StringVar(&model_path, "model", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/stanford-postagger/models/english-left3words-distsim.tagger", "Path to the tagger's model.")
 	flag.StringVar(&tagger_path, "tagger", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/stanford-postagger/stanford-postagger-3.7.0.jar", "Path to the tagger JAR.")
 	flag.StringVar(&db_path, "db", os.Getenv("GOPATH")+"/src/github.com/hotelcalifornia/x64/words.db", "Path to the database of words")
-	flag.BoolVar(&silent, "silent", True, "Suppress printing to stdout. Good for debugging, or if you want to see the tagger in action")
+	flag.BoolVar(&silent, "silent", true, "Suppress printing to stdout. Good for debugging, or if you want to see the tagger in action")
 	flag.Parse()
 	rand.Seed(time.Now().Unix())
 	re = regexp.MustCompile(`[^a-zA-Z0-9\s.,?!;:'"\[\]/\\()\-_+@#$%^&*|<>=]`)
