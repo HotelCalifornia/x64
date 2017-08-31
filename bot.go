@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+const Prefix = "(: "
+
 type Cmd struct {
 	id   string
 	desc string
@@ -69,7 +71,7 @@ func initCommands() {
 		"",
 		"",
 		func(s *discordgo.Session, m *discordgo.MessageCreate, _ []string) {
-			_, _ = s.ChannelMessageSend(m.ChannelID, "Usage: `*<cmd> <args>`\nFor more, see `*help`")
+			_, _ = s.ChannelMessageSend(m.ChannelID, "Usage: `"+Prefix+"<cmd> <args>`\nFor more, see `"+Prefix+"help`")
 		},
 	})
 	commands = append(commands, Cmd{
@@ -236,8 +238,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == botID {
 		return
 	}
-	if strings.HasPrefix(m.Content, "(: ") {
-		c := strings.Split(strings.TrimPrefix(m.Content, "(: "), " ")
+	if strings.HasPrefix(m.Content, Prefix) {
+		c := strings.Split(strings.TrimPrefix(m.Content, Prefix), " ")
 		if !silent {
 			fmt.Printf("%v\n", c)
 		}
