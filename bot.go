@@ -236,8 +236,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == botID {
 		return
 	}
-	if strings.HasPrefix(m.Content, "*") {
-		c := strings.Split(strings.TrimPrefix(m.Content, "*"), " ")
+	if strings.HasPrefix(m.Content, "(: ") {
+		c := strings.Split(strings.TrimPrefix(m.Content, "(: "), " ")
 		if !silent {
 			fmt.Printf("%v\n", c)
 		}
